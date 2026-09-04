@@ -2,7 +2,7 @@
   "name": "Blackjack Trainer",
   "short_name": "Blackjack",
   "description": "Basic-strategy feedback, Hi-Lo card counting practice, regional rule presets, and a house-odds view. Simulated chips only.",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",

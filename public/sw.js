@@ -1,8 +1,10 @@
-const CACHE_VERSION = 'bj-trainer-v1';
+const CACHE_VERSION = 'bj-trainer-v2';
 
+// Precache './' rather than './index.html': Cloudflare serves the app at '/' and
+// 307-redirects '/index.html' to it, so precaching the redirecting URL would
+// store an entry that later navigation requests never match.
 const PRECACHE_URLS = [
   './',
-  './index.html',
   './bj-audio.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
@@ -89,10 +91,10 @@ self.addEventListener('fetch', function (event) {
     event.respondWith(
       fetch(req).then(function (res) {
         const copy = res.clone();
-        caches.open(CACHE_VERSION).then(function (cache) { cache.put('./index.html', copy); });
+        caches.open(CACHE_VERSION).then(function (cache) { cache.put('./', copy); });
         return res;
       }).catch(function () {
-        return caches.match('./index.html');
+        return caches.match('./');
       })
     );
     return;

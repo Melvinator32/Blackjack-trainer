@@ -1,0 +1,27 @@
+{
+  // Blackjack Trainer — deployed as a static-assets Worker.
+  //
+  // The app is entirely client-side (vanilla HTML/CSS/JS, no backend), so there
+  // is no `main` Worker script: Cloudflare serves ./public directly. If an API
+  // is ever needed, add `"main": "src/index.ts"` and the ASSETS binding below.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blackjack-trainer",
+  "compatibility_date": "2025-09-01",
+
+  "assets": {
+    // Only ./public is uploaded — repo metadata (.git, README, config) stays out.
+    "directory": "./public",
+
+    // "auto-trailing-slash": "/" serves index.html, and "/index.html" 307s to "/".
+    // The service worker precaches "./" (not "./index.html") to match this.
+    "html_handling": "auto-trailing-slash",
+
+    // The app is a single page; unknown paths return the 404 page rather than
+    // silently rewriting to index.html.
+    "not_found_handling": "none"
+  },
+
+  "observability": {
+    "enabled": true
+  }
+}

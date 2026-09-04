@@ -1,0 +1,8 @@
+# The service worker must always be revalidated, otherwise an installed copy
+# keeps serving the old cached app and updates never reach users.
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: no-cache
