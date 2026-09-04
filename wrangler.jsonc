@@ -1,24 +1,41 @@
 {
-  // Blackjack Trainer — deployed as a static-assets Worker.
+  // Blackjack Trainer — static assets + a small Worker API for accounts/sync.
   //
-  // The app is entirely client-side (vanilla HTML/CSS/JS, no backend), so there
-  // is no `main` Worker script: Cloudflare serves ./public directly. If an API
-  // is ever needed, add `"main": "src/index.ts"` and the ASSETS binding below.
+  // Static files in ./public are served by Cloudflare's asset layer. Requests
+  // that don't match an asset fall through to src/index.js, which owns /api/*.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blackjack-trainer",
+  "main": "src/index.js",
   "compatibility_date": "2025-09-01",
 
   "assets": {
     // Only ./public is uploaded — repo metadata (.git, README, config) stays out.
     "directory": "./public",
+    "binding": "ASSETS",
 
     // "auto-trailing-slash": "/" serves index.html, and "/index.html" 307s to "/".
     // The service worker precaches "./" (not "./index.html") to match this.
     "html_handling": "auto-trailing-slash",
-
-    // The app is a single page; unknown paths return the 404 page rather than
-    // silently rewriting to index.html.
     "not_found_handling": "none"
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blackjack-trainer",
+      // Replace with the id printed by: npx wrangler d1 create blackjack-trainer
+      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "vars": {
+    // Non-secret config only. Secrets are set with `wrangler secret put` and are
+    // never committed or exposed to the browser.
+    //   GOOGLE_CLIENT_ID     (secret) - OAuth client id
+    //   GOOGLE_CLIENT_SECRET (secret) - OAuth client secret
+    //   RESEND_API_KEY       (secret) - only needed for email code sign-in
+    "MAIL_FROM": "Blackjack Trainer <onboarding@resend.dev>"
   },
 
   "observability": {

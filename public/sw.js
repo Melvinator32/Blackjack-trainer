@@ -1,10 +1,11 @@
-const CACHE_VERSION = 'bj-trainer-v2';
+const CACHE_VERSION = 'bj-trainer-v3';
 
 // Precache './' rather than './index.html': Cloudflare serves the app at '/' and
 // 307-redirects '/index.html' to it, so precaching the redirecting URL would
 // store an entry that later navigation requests never match.
 const PRECACHE_URLS = [
   './',
+  './sync.js',
   './bj-audio.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
@@ -85,6 +86,11 @@ self.addEventListener('fetch', function (event) {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+
+  // Never cache the API. These responses are per-user and session-dependent —
+  // caching them could serve one account's data to the next person on this
+  // device, and would mask sign-in/sign-out state changes.
+  if (url.pathname.startsWith('/api/')) return;
 
   // Navigations: try the network first so updates show up, fall back to cache offline.
   if (req.mode === 'navigate') {
