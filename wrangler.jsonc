@@ -23,8 +23,8 @@
     {
       "binding": "DB",
       "database_name": "blackjack-trainer",
-      // Replace with the id printed by: npx wrangler d1 create blackjack-trainer
-      "database_id": "REPLACE_WITH_YOUR_D1_DATABASE_ID",
+      // Created with: npx wrangler d1 create blackjack-trainer
+      "database_id": "6eede64c-42f0-414d-b95f-c48f715aad50",
       "migrations_dir": "migrations"
     }
   ],
